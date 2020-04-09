@@ -47,15 +47,23 @@ def send(event=None):
             filter.write(msg)
             filter.close()
             recommendedWords = word2vec.getWordsSimilarTo(msg)
-            suggestionMessage = craft_suggestion_message(recommendedWords, msg)
-            msg_list.insert(END, suggestionMessage)
+            if len(recommendedWords) > 1:
+                suggestionMessage = craft_suggestion_message(recommendedWords, msg)
+                msg_list.insert(END, "\n" + suggestionMessage)
+            else:
+                msg_list.insert(END, "\n" + "No suggested words to filter were found")
             popup_message('"' + msg + '" has been added')
 
 #close connection and exist
 def on_closing(event=None):
     #cleanup function when client is closed
     my_msg.set("{quit}")
+    global modeMessage
+    sendMode = 0
     send()
+    time.sleep(1)
+    client_socket.close()
+    window.destroy()
 
 # Create message for filter suggestions
 def craft_suggestion_message(wordList, word):

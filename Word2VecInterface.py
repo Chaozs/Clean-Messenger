@@ -8,5 +8,8 @@ class Word2VecInterface:
         self.model = word2vec.load("Word2VecData/chat.bin")
 
     def getWordsSimilarTo(self, word):
-        indexes, metrics = self.model.similar(word)
-        return self.model.vocab[indexes]
+        try:
+            indexes, metrics = self.model.similar(word)
+            return self.model.vocab[indexes]
+        except:
+            return [-1]
