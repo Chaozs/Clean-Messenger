@@ -5,6 +5,7 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 from tkinter import *
 from tkinter.messagebox import showinfo
+import sys, WordChecker, Word2VecInterface, time
 import sys, WordChecker, Word2VecInterface
 
 #for connecting to server
@@ -123,4 +124,5 @@ window.protocol("WM_DELETE_WINDOW", on_closing)
 
 receive_thread = Thread(target=receive)
 receive_thread.start()
+window.protocol("WM_DELETE_WINDOW", on_closing)
 mainloop()  # Starts GUI execution.
