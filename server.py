@@ -3,8 +3,6 @@
 
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
-from externalWordChecker import init_word_database, check_word_exists
-from filter import filter
 
 clients = {}
 addresses = {}
@@ -57,9 +55,8 @@ def handle_client(client):  # Takes client socket as argument.
 #function to broadcast message to all connected clients
 def broadcast(msg, prefix=""): 
     # sends message to all connected clients
-    filteredMsg = filter(msg)
     for sock in clients:
-        sock.send(bytes(prefix, "utf8")+bytes(filter(msg), "utf8"))
+        sock.send(bytes(prefix, "utf8")+bytes(msg, "utf8"))
 
 if __name__ == "__main__":
     SERVER.listen(5)
