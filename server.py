@@ -8,7 +8,7 @@ clients = {}
 addresses = {}
 
 BUFSIZ = 1024
-serverAddress = ('localhost', 9999)
+serverAddress = ('localhost', 9998)
 
 SERVER = socket(AF_INET, SOCK_STREAM)
 SERVER.bind(serverAddress)
