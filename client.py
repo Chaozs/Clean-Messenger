@@ -37,7 +37,7 @@ def send(event=None):
         if msg == "{quit}": #client is closed
             client_socket.close()
             window.quit()
-    else:
+    elif sendMode == 1:
         #if word is already in list, give error message
         if WordChecker.check_if_in_file("filter", msg):
             popup_message("Word already exists")
@@ -54,17 +54,20 @@ def send(event=None):
             else:
                 msg_list.insert(END, "\n" + "No suggested words to filter were found")
             popup_message('"' + msg + '" has been added')
+    elif sendMode == 2:
+        if WordChecker.check_if_in_file("filter", msg):
+            WordChecker.remove_string_from_file("filter", msg)
+            popup_message(msg + " was removed from filter list")
+        else:
+            popup_message("That word was not found in filter list")
 
 #close connection and exist
 def on_closing(event=None):
     #cleanup function when client is closed
     my_msg.set("{quit}")
-    global modeMessage
+    global sendMode
     sendMode = 0
     send()
-    time.sleep(1)
-    client_socket.close()
-    window.destroy()
 
 # Create message for filter suggestions
 def craft_suggestion_message(wordList, word):
@@ -83,6 +86,9 @@ def swapMode():
     if sendMode == 0:
         sendMode = 1
         my_msg.set("Type word to filter here")
+    elif sendMode == 1:
+        sendMode = 2
+        my_msg.set("Type word to remove from filter here")
     else:
         sendMode = 0
         my_msg.set("Type your messages here.")

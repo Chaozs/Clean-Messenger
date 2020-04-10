@@ -15,12 +15,10 @@ SERVER = socket(AF_INET, SOCK_STREAM)
 SERVER.bind(serverAddress)
 
 def signal_handler(sig, frame):
-    print('You pressed Ctrl+C!')
     SERVER.close()
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
-signal.pause()
 
 #indefinite loop waiting for incoming connections
 def accept_incoming_connections():
