@@ -133,8 +133,7 @@ swap_button = Button(window, text="Swap mode", command=swapMode)
 swap_button.pack(anchor=E)
 
 window.protocol("WM_DELETE_WINDOW", on_closing)
+mainloop()  # Starts GUI execution.
 
 receive_thread = Thread(target=receive)
 receive_thread.start()
-window.protocol("WM_DELETE_WINDOW", on_closing)
-mainloop()  # Starts GUI execution.
