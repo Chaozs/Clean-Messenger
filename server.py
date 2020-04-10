@@ -3,15 +3,24 @@
 
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
+import signal, sys
 
 clients = {}
 addresses = {}
 
 BUFSIZ = 1024
-serverAddress = ('localhost', 9998)
+serverAddress = ('localhost', 9990)
 
 SERVER = socket(AF_INET, SOCK_STREAM)
 SERVER.bind(serverAddress)
+
+def signal_handler(sig, frame):
+    print('You pressed Ctrl+C!')
+    SERVER.close()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.pause()
 
 #indefinite loop waiting for incoming connections
 def accept_incoming_connections():
