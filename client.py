@@ -86,16 +86,22 @@ def swapMode():
     if sendMode == 0:
         sendMode = 1
         my_msg.set("Type word to filter here")
+        mode.set("Adding to Filter")
     elif sendMode == 1:
         sendMode = 2
         my_msg.set("Type word to remove from filter here")
+        mode.set("Removing from Filter")
     else:
         sendMode = 0
         my_msg.set("Type your messages here.")
+        mode.set("Sending Message")
 
 window = Tk()
 window.title("Clean Messenger")
 window.geometry('400x350')
+
+mode = StringVar()
+mode.set("Sending Message")
 
 #frame for holding list of messages
 messages_frame = Frame(window)
@@ -113,7 +119,7 @@ msg_list.pack(side=LEFT, fill=BOTH)
 msg_list.pack()
 messages_frame.pack()
 
-modeMessage = Label(window, textvariable="")
+modeMessage = Label(window, textvariable=mode)
 modeMessage.pack(anchor=N)
 
 #input field for user to input message
