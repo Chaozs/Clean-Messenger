@@ -3,6 +3,7 @@
 def get_words_from_file(filename):
 
     fileWords = open(filename, "r")
+    next(fileWords)
     words = fileWords.readlines()
     fileWords.close()
     return words
@@ -17,8 +18,8 @@ def check_word_exists_in(words, stringToCheck):
 
 def add_word_to_file(filename, stringToAdd):
     file = open(filename, "a+")
-    file.write("\n")
     file.write(stringToAdd)
+    file.write("\n")
     file.close()
 
 # remove a word from a file
