@@ -6,7 +6,6 @@ from threading import Thread
 from tkinter import *
 from tkinter.messagebox import showinfo
 import sys, WordChecker, Word2VecInterface, time
-import sys, WordChecker, Word2VecInterface
 
 #for connecting to server
 BUFSIZ = 1024
@@ -18,18 +17,22 @@ client_socket.connect(ADDR)
 sendMode = 0 # 0 = send message, 1 = add to filter
 word2vec = Word2VecInterface.Word2VecInterface()
 
+def filter(msg):
+    filtered_msg = msg
+    return filtered_msg
+
 def receive():
     #infinite loop due for receiving messages non-deterministically
     while True:
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")
-            msg_list.insert(END, "\n" + msg)
+            msg_list.insert(END, "\n" + filter(msg))
+            print(msg)
         except OSError:  # Possibly client has left the chat.
             break
 
 # Sending a message to connected server
 def send(event=None):
-    """Handles sending of messages."""
     msg = my_msg.get() #input field on GUI
     my_msg.set("")  # Clears input field.
     if sendMode == 0:
@@ -39,14 +42,12 @@ def send(event=None):
             window.quit()
     elif sendMode == 1:
         #if word is already in list, give error message
-        if WordChecker.check_if_in_file("filter", msg):
+        words = WordChecker.get_words_from_file('filter.txt')
+        if WordChecker.check_word_exists_in(words, msg):
             popup_message("Word already exists")
         #otherwise add word to filter list
         else:
-            filter = open("filter.txt", "a+")
-            filter.write("\n")
-            filter.write(msg)
-            filter.close()
+            WordChecker.add_word_to_file("filter.txt", msg)
             recommendedWords = word2vec.getWordsSimilarTo(msg)
             if len(recommendedWords) > 1:
                 suggestionMessage = craft_suggestion_message(recommendedWords, msg)
@@ -55,7 +56,8 @@ def send(event=None):
                 msg_list.insert(END, "\n" + "No suggested words to filter were found")
             popup_message('"' + msg + '" has been added')
     elif sendMode == 2:
-        if WordChecker.check_if_in_file("filter", msg):
+        words = WordChecker.get_words_from_file('filter.txt')
+        if WordChecker.check_word_exists_in(words, msg):
             WordChecker.remove_string_from_file("filter", msg)
             popup_message(msg + " was removed from filter list")
         else:
@@ -133,7 +135,7 @@ swap_button = Button(window, text="Swap mode", command=swapMode)
 swap_button.pack(anchor=E)
 
 window.protocol("WM_DELETE_WINDOW", on_closing)
-mainloop()  # Starts GUI execution.
 
 receive_thread = Thread(target=receive)
 receive_thread.start()
+mainloop()  # Starts GUI execution.

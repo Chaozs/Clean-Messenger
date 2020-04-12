@@ -1,35 +1,28 @@
 
 # Read file with english words, return list of all words seperated by newline
-def init_word_database() :
+def get_words_from_file(filename):
 
-    fileWords = open('EnglishWords.csv', 'r')
-    englishWords = fileWords.readlines()
-    filter.close()
-    return englishWords
+    fileWords = open(filename, "r")
+    words = fileWords.readlines()
+    fileWords.close()
+    return words
 
-# check if a string exists in a list of words
-def check_word_exists_in(englishWords, stringToCheck) :
-    for word in englishWords:
+# check if a string exists in a list of words that are passed in
+def check_word_exists_in(words, stringToCheck):
+    for word in words:
         #print (word.strip())
         if word.strip() == stringToCheck:
             return True
     return False
 
-# Check if a string exists in specified file
-def check_if_in_file(filename, stringToCheck) :
-    exists = False
-    file = filename + ".txt"
-    filter = open(file, "r")
-    filterWords = filter.readlines()
-    for word in filterWords:
-        if word.strip() == stringToCheck.strip():
-            filter.close()
-            return True
-    filter.close()
-    return False
+def add_word_to_file(filename, stringToAdd):
+    file = open(filename, "a+")
+    file.write("\n")
+    file.write(stringToAdd)
+    file.close()
 
-# Check if a string exists in specified file
-def remove_string_from_file(filename, stringToCheck) :
+# remove a word from a file
+def remove_string_from_file(filename, stringToCheck):
     file = filename + ".txt"
     filter = open(file, "r+")
     filterWords = filter.readlines()
