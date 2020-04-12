@@ -5,7 +5,7 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 from tkinter import *
 from tkinter.messagebox import showinfo
-import sys, WordChecker, Word2VecInterface, time
+import sys, WordChecker, Word2VecInterface, time, Filter
 
 #for connecting to server
 BUFSIZ = 1024
@@ -36,7 +36,8 @@ def send(event=None):
     msg = my_msg.get() #input field on GUI
     my_msg.set("")  # Clears input field.
     if sendMode == 0:
-        client_socket.send(bytes(msg, "utf8"))
+        cleanMessage = Filter.filterMessage(msg)
+        client_socket.send(bytes(cleanMessage, "utf8"))
         if msg == "{quit}": #client is closed
             client_socket.close()
             window.quit()
