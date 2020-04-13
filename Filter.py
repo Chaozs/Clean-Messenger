@@ -37,6 +37,6 @@ def filterHamming(msg, asteriskString, filterWords, englishWords):
 
 def checkIfRealWord(filterWord, englishWords):
     for word in englishWords:
-        if filterWord == word:
+        if filterWord.strip() == word.strip():
             return True
     return False
