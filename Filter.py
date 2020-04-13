@@ -4,16 +4,32 @@ import HammingDistance
 
 #function for filtering a message. Will return a filtered message
 def filterMessage(msg):
+    #split message string into list of words, seperated by white space
+    message = list(msg.split(" "))
     filterWords = WordChecker.get_words_from_file("filter.txt")
-    numAsterisks = random.randrange(2,6)
-    asteriskString = ""
     englishWords = WordChecker.get_words_from_file("EnglishWords.csv")
 
+    #for each word in list of words from message
+    for index, word in enumerate(message):
+        #check that current word is not a normal english word first
+        if not checkIfRealWord(word, englishWords):
+            #filter that word otherwise
+            message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
+            message[index] = filterHamming(message[index], generateRandomAsteriskString(), filterWords)
+
+    #rebuild the llist of words back into the message seperated by space
+    filteredMsg = ""
+    for word in message:
+        filteredMsg = filteredMsg + word + " "
+    return filteredMsg
+
+#generate a string consisting of random number of asterisks 2-5 in length
+def generateRandomAsteriskString():
+    numAsterisks = random.randrange(2,6)
+    asteriskString = ""
     for i in range(numAsterisks):
         asteriskString = asteriskString + "*"
-    filteredMsg = filterExact(msg, asteriskString, filterWords)
-    filteredMsg = filterHamming(filteredMsg, asteriskString, filterWords, englishWords)
-    return filteredMsg
+    return asteriskString
 
 #function to filter exact matches to words on filter list
 def filterExact(msg, asteriskString, filterWords):
@@ -23,7 +39,7 @@ def filterExact(msg, asteriskString, filterWords):
     return filteredMsg
 
 #function to replace all words with hamming distance of 1 from a word in filter list to be censored
-def filterHamming(msg, asteriskString, filterWords, englishWords):
+def filterHamming(msg, asteriskString, filterWords):
     filteredMsg = msg
     #list of all common ASCII characters
     alphabet = "abcdefghijklmnopqrstuvwxyz01234567890[]{}';:,./<>?`~!@#$%^&*()-_=+`"
@@ -31,8 +47,7 @@ def filterHamming(msg, asteriskString, filterWords, englishWords):
     for word in filterWords:
         #for each possible string within hamming distance 1
         for item in HammingDistance.hamming_circle(word.strip(), 1, alphabet):
-            if checkIfRealWord(item, englishWords) == False:
-                filteredMsg = filteredMsg.replace(item.strip(), asteriskString)
+            filteredMsg = filteredMsg.replace(item.strip(), asteriskString)
     return filteredMsg
 
 def checkIfRealWord(filterWord, englishWords):
