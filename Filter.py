@@ -9,13 +9,16 @@ def filterMessage(msg):
     filterWords = WordChecker.get_words_from_file("filter.txt")
     englishWords = WordChecker.get_words_from_file("EnglishWords.txt")
 
+    hammingDistance = 1
+
     #for each word in list of words from message
     for index, word in enumerate(message):
         #check that current word is not a normal english word first
         if not checkIfRealWord(word, englishWords):
             #filter that word otherwise
-            message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
-            message[index] = filterHamming(message[index], generateRandomAsteriskString(), filterWords)
+            #message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
+            #hamming distance of 1 can be inclusive of 0 for exact match also
+            message[index] = filterHamming(message[index], generateRandomAsteriskString(), filterWords, hammingDistance)
 
     #rebuild the llist of words back into the message seperated by space
     filteredMsg = ""
@@ -35,19 +38,20 @@ def generateRandomAsteriskString():
 def filterExact(msg, asteriskString, filterWords):
     filteredMsg = msg
     for word in filterWords:
-        filteredMsg = filteredMsg.replace(word.strip(), asteriskString)
+        #filteredMsg = filteredMsg.replace(word.strip(), asteriskString)
+        pass
     return filteredMsg
 
 #function to replace all words with hamming distance of 1 from a word in filter list to be censored
-def filterHamming(msg, asteriskString, filterWords):
+def filterHamming(msg, asteriskString, filterWords, hammingDistance):
     filteredMsg = msg
-    #list of all common ASCII characters
-    alphabet = "abcdefghijklmnopqrstuvwxyz01234567890[]{}';:,./<>?`~!@#$%^&*()-_=+`"
     #for each word in filter list
     for word in filterWords:
-        #for each possible string within hamming distance 1
-        for item in HammingDistance.hamming_circle(word.strip(), 1, alphabet):
-            filteredMsg = filteredMsg.replace(item.strip(), asteriskString)
+        #only check hamming distance of strings are same length
+        if len(word.strip()) == len(msg.strip()):
+            #if hamming distance isthe value passed in or less, censor it
+            if HammingDistance.hamming_distance(word.strip(), msg.strip()) <= hammingDistance:
+                filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
     return filteredMsg
 
 def checkIfRealWord(filterWord, englishWords):

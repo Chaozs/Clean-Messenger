@@ -1,9 +1,16 @@
 # Source is obtained from:
 # https://codereview.stackexchange.com/questions/88912/create-a-list-of-all-strings-within-hamming-distance-of-a-reference-string-with
+# https://stackoverflow.com/questions/54172831/hamming-distance-between-two-strings-in-python
 #I claim zero credit to this implementation, I have only tested its efficiency, and utilized it in my project.
 
 from itertools import chain, combinations, product
+import hashlib
 
+#calculate hamming distance between 2 strings
+def hamming_distance(chaine1, chaine2):
+    return sum(c1 != c2 for c1, c2 in zip(chaine1, chaine2))
+
+#not used
 def hamming_circle(s, n, alphabet):
     """Generate strings over alphabet whose Hamming distance from s is
     exactly n.
@@ -26,6 +33,7 @@ def hamming_circle(s, n, alphabet):
                     cousin[p] = alphabet[r]
             yield ''.join(cousin)
 
+#not used
 def hamming_ball(s, n, alphabet):
     """Generate strings over alphabet whose Hamming distance from s is
     less than or equal to n.
