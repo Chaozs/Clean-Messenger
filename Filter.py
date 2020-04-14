@@ -58,7 +58,7 @@ def filter(msg, asteriskString, filterWords, hammingDistance, levenshteinDistanc
             elif distance(word.strip(), msg.strip()) <= levenshteinDistance:
                 filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
         #if length not equal, check if within levenshtein distance length
-        elif abs(len(word.strip()) - len(msg.strip()) >= levenshteinDistance
+        elif abs(len(word.strip()) - len(msg.strip()) <= levenshteinDistance):
             # check if levenshtein distance is within range to be filtered
             if distance(word.strip(), msg.strip()) <= levenshteinDistance:
                 filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
