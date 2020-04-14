@@ -17,16 +17,12 @@ client_socket.connect(ADDR)
 sendMode = 0 # 0 = send message, 1 = add to filter
 word2vec = Word2VecInterface.Word2VecInterface()
 
-def filter(msg):
-    filtered_msg = msg
-    return filtered_msg
-
 def receive():
     #infinite loop due for receiving messages non-deterministically
     while True:
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")
-            msg_list.insert(END, "\n" + filter(msg))
+            msg_list.insert(END, "\n" + Filter.filterMessage(msg))
         except OSError:  # Possibly client has left the chat.
             break
 
@@ -35,8 +31,7 @@ def send(event=None):
     msg = my_msg.get() #input field on GUI
     my_msg.set("")  # Clears input field.
     if sendMode == 0:
-        cleanMessage = Filter.filterMessage(msg)
-        client_socket.send(bytes(cleanMessage, "utf8"))
+        client_socket.send(bytes(msg, "utf8"))
         if msg == "{quit}": #client is closed
             client_socket.close()
             window.quit()
