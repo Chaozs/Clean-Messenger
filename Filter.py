@@ -7,7 +7,7 @@ def filterMessage(msg):
     #split message string into list of words, seperated by white space
     message = list(msg.split(" "))
     filterWords = WordChecker.get_words_from_file("filter.txt")
-    englishWords = WordChecker.get_words_from_file("EnglishWords.csv")
+    englishWords = WordChecker.get_words_from_file("EnglishWords.txt")
 
     #for each word in list of words from message
     for index, word in enumerate(message):

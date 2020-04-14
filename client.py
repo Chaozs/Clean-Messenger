@@ -50,7 +50,7 @@ def send(event=None):
         else:
             WordChecker.add_word_to_file("filter.txt", msg)
             #remove this new filter words from list of englishwords, IF it exists also
-            WordChecker.remove_string_from_file("EnglishWords.csv", msg)
+            WordChecker.remove_string_from_file("EnglishWords.txt", msg)
             recommendedWords = word2vec.getWordsSimilarTo(msg)
             if len(recommendedWords) > 1:
                 suggestionMessage = craft_suggestion_message(recommendedWords, msg)
@@ -65,7 +65,7 @@ def send(event=None):
         if WordChecker.check_word_exists_in(words, msg):
             #remove word from filter list
             WordChecker.remove_string_from_file("filter.txt", msg)
-            WordChecker.add_word_to_file("EnglishWords.csv", msg)
+            WordChecker.add_word_to_file("EnglishWords.txt", msg)
             popup_message(msg + " was removed from filter list")
         else:
             popup_message("That word was not found in filter list")
