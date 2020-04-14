@@ -23,8 +23,7 @@ def add_word_to_file(filename, stringToAdd):
 
 # remove a word from a file
 def remove_string_from_file(filename, stringToCheck):
-    file = filename + ".txt"
-    filter = open(file, "r+")
+    filter = open(filename, "r+")
     filterWords = filter.readlines()
     filter.seek(0)
     for word in filterWords:
