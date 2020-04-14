@@ -49,7 +49,6 @@ def handle_client(client):  # Takes client socket as argument.
         msg = client.recv(BUFSIZ)
         if msg != bytes("{quit}", "utf8"):
             msg = msg.decode("utf8")
-            print(msg)
             broadcast(msg, name+": ")
         #else remove client from client list
         else:

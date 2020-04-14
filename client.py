@@ -1,4 +1,4 @@
-#Source code from: https://medium.com/swlh/lets-write-a-chat-app-in-python-f6783a9ac170
+#TCP connection setup based off: https://medium.com/swlh/lets-write-a-chat-app-in-python-f6783a9ac170
 #!/usr/bin/env python3
 
 from socket import AF_INET, socket, SOCK_STREAM
@@ -27,7 +27,6 @@ def receive():
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")
             msg_list.insert(END, "\n" + filter(msg))
-            print(msg)
         except OSError:  # Possibly client has left the chat.
             break
 
