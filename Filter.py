@@ -1,6 +1,5 @@
-import WordChecker
-import random
-import HammingDistance
+import WordChecker, random
+from Levenshtein import distance, hamming
 
 #function for filtering a message. Will return a filtered message
 def filterMessage(msg):
@@ -10,6 +9,7 @@ def filterMessage(msg):
     englishWords = WordChecker.get_words_from_file("EnglishWords.txt")
 
     hammingDistance = 1
+    levenshteinDistance = 2
 
     #for each word in list of words from message
     for index, word in enumerate(message):
@@ -18,7 +18,8 @@ def filterMessage(msg):
             #filter that word otherwise
             #message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
             #hamming distance of 1 can be inclusive of 0 for exact match also
-            message[index] = filterHamming(message[index], generateRandomAsteriskString(), filterWords, hammingDistance)
+            message[index] = filter(message[index], generateRandomAsteriskString(),
+            filterWords, hammingDistance, levenshteinDistance)
 
     #rebuild the llist of words back into the message seperated by space
     filteredMsg = ""
@@ -34,6 +35,7 @@ def generateRandomAsteriskString():
         asteriskString = asteriskString + "*"
     return asteriskString
 
+#unused
 #function to filter exact matches to words on filter list
 def filterExact(msg, asteriskString, filterWords):
     filteredMsg = msg
@@ -42,15 +44,23 @@ def filterExact(msg, asteriskString, filterWords):
         pass
     return filteredMsg
 
-#function to replace all words with hamming distance of 1 from a word in filter list to be censored
-def filterHamming(msg, asteriskString, filterWords, hammingDistance):
+#function to filter utilization hamming distance and Levenshtein distance
+def filter(msg, asteriskString, filterWords, hammingDistance, levenshteinDistance):
     filteredMsg = msg
     #for each word in filter list
     for word in filterWords:
         #only check hamming distance of strings are same length
         if len(word.strip()) == len(msg.strip()):
             #if hamming distance isthe value passed in or less, censor it
-            if HammingDistance.hamming_distance(word.strip(), msg.strip()) <= hammingDistance:
+            if hamming(word.strip(), msg.strip()) <= hammingDistance:
+                filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
+            #if not within hamming distance, check levenshtein distance is within range to be filtered
+            elif distance(word.strip(), msg.strip()) <= levenshteinDistance:
+                filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
+        #if length not equal, check if within levenshtein distance length
+        elif abs(len(word.strip()) - len(msg.strip()) >= levenshteinDistance
+            # check if levenshtein distance is within range to be filtered
+            if distance(word.strip(), msg.strip()) <= levenshteinDistance:
                 filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
     return filteredMsg
 
