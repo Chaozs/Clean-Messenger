@@ -30,6 +30,8 @@ def remove_string_from_file(filename, stringToCheck):
     for word in filterWords:
         if word.strip() != stringToCheck.strip():
             filter.write(word)
+        else:
+            pass
     filter.truncate()
     filter.close()
     return False

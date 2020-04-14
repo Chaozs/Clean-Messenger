@@ -9,7 +9,7 @@ import sys, WordChecker, Word2VecInterface, time, Filter
 
 #for connecting to server
 BUFSIZ = 1024
-ADDR = ('localhost', 9998)
+ADDR = ('localhost', 9999)
 
 client_socket = socket(AF_INET, SOCK_STREAM)
 client_socket.connect(ADDR)
