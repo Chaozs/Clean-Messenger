@@ -9,10 +9,9 @@ def get_words_from_file(filename):
 
 # check if a string exists in a list of words that are passed in
 def check_word_exists_in(words, stringToCheck):
-    for word in words:
-        if word.strip() == stringToCheck:
-            return True
-    return False
+    #Check if word exists in list of english words
+    #check lowercase of filte word, as all strings in englishWords are lowercase
+    return (stringToCheck.lower() in words)
 
 def add_word_to_file(filename, stringToAdd):
     file = open(filename, "a+")

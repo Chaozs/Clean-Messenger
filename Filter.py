@@ -36,7 +36,7 @@ def generateRandomAsteriskString():
 #unused
 #function to filter exact matches to words on filter list
 def filterExact(msg, asteriskString, filterWords):
-    filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
+    filteredMsg = filteredMsg.replace(msg, asteriskString)
     return filteredMsg
 
 #function to filter utilization hamming distance and Levenshtein distance
@@ -46,25 +46,21 @@ def filter(msg, asteriskString, filterWords, englishWords, hammingDistance, leve
     for word in filterWords:
         #for all criteria check if it's a proper english word before filtering it
         #only check hamming distance of strings are same length
-        if len(word.strip()) == len(filteredMsg):
+        if len(word) == len(filteredMsg):
             #if hamming distance isthe value passed in or less, censor it
-            if hamming(word.strip(), filteredMsg) <= hammingDistance:
-                if not checkIfRealWord(filteredMsg, englishWords):
+            if hamming(word, filteredMsg) <= hammingDistance:
+                if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
                     filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
                     return filteredMsg
             #if not within hamming distance, check levenshtein distance is within range to be filtered
-            elif distance(word.strip(), filteredMsg) <= levenshteinDistance:
-                if not checkIfRealWord(filteredMsg, englishWords):
+            elif distance(word, filteredMsg) <= levenshteinDistance:
+                if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
                     filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
                     return filteredMsg
         #if not same length, check if within levenshtein distance insert range
-        elif abs(len(word.strip()) - len(filteredMsg) <= levenshteinDistance):
-            if distance(word.strip(), filteredMsg) <= levenshteinDistance:
-                if not checkIfRealWord(filteredMsg, englishWords):
+        elif abs(len(word) - len(filteredMsg) <= levenshteinDistance):
+            if distance(word, filteredMsg) <= levenshteinDistance:
+                if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
                     filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
                     return filteredMsg
     return filteredMsg
-
-def checkIfRealWord(filterWord, englishWords):
-    #Check if word exists in list of english words
-    return (filterWord in englishWords)
