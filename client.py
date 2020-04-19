@@ -24,7 +24,7 @@ def receive():
     while True:
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")
-            msg_list.insert(END, "\n" + Filter.filterMessage(msg, 1, 2))
+            msg_list.insert(END, "\n" + Filter.filterMessage(msg, 2))
         except OSError:  # Possibly client has left the chat.
             break
 
