@@ -14,8 +14,8 @@ def filterMessage(msg, hammingDistance, levenshteinDistance):
         if len(word) == 0:
             pass
         else:
-            message[index] = filter(message[index],
-                    generateRandomAsteriskString(), filterWords, englishWords, hammingDistance, levenshteinDistance)
+            message[index] = filter(message[index], filterWords,
+            englishWords, hammingDistance, levenshteinDistance)
     #rebuild the list of words back into the message seperated by space
     filteredMsg = ""
     for word in message:
@@ -37,7 +37,7 @@ def filterExact(msg, asteriskString, filterWords):
     return filteredMsg
 
 #function to filter utilization hamming distance and Levenshtein distance
-def filter(msg, asteriskString, filterWords, englishWords, hammingDistance, levenshteinDistance):
+def filter(msg, filterWords, englishWords, hammingDistance, levenshteinDistance):
     #Filter special characters from string
     filteredMsg = ''.join(e for e in msg if e.isalnum())
     #for each word in filter list
@@ -49,15 +49,15 @@ def filter(msg, asteriskString, filterWords, englishWords, hammingDistance, leve
             #if hamming distance isthe value passed in or less, censor it
             if hamming(word, filteredMsg) <= hammingDistance:
                 if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
-                    return asteriskString
+                    return generateRandomAsteriskString()
             #if not within hamming distance, check levenshtein distance is within range to be filtered
             elif distance(word, filteredMsg) <= levenshteinDistance:
                 if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
-                    return asteriskString
+                    return generateRandomAsteriskString()
         #if not same length, check if within levenshtein distance insert range
         elif abs(len(word) - len(filteredMsg) <= levenshteinDistance):
             if distance(word, filteredMsg) <= levenshteinDistance:
                 if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
-                    return asteriskString
+                    return generateRandomAsteriskString()
     # Otherwise, return original string
     return msg
