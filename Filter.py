@@ -2,24 +2,20 @@ import WordChecker, random
 from Levenshtein import distance, hamming
 
 #function for filtering a message. Will return a filtered message
-def filterMessage(msg):
+def filterMessage(msg, hammingDistance, levenshteinDistance):
     #split message string into list of words, seperated by white space
     message = list(msg.split(" "))
     filterWords = WordChecker.get_words_from_file("filter.txt")
     englishWords = WordChecker.get_words_from_file("EnglishWords.txt")
 
-    hammingDistance = 1
-    levenshteinDistance = 2
-
     #for each word in list of words from message
     for index, word in enumerate(message):
+        #Skip empty strings
         if len(word) == 0:
             pass
         else:
-            #message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
-            #hamming distance of 1 can be inclusive of 0 for exact match also
-            message[index] = filter(message[index], generateRandomAsteriskString(),
-                    filterWords, englishWords, hammingDistance, levenshteinDistance)
+            message[index] = filter(message[index],
+                    generateRandomAsteriskString(), filterWords, englishWords, hammingDistance, levenshteinDistance)
     #rebuild the list of words back into the message seperated by space
     filteredMsg = ""
     for word in message:
@@ -34,7 +30,7 @@ def generateRandomAsteriskString():
         asteriskString = asteriskString + "*"
     return asteriskString
 
-#unused
+#unused - testing purposes only
 #function to filter exact matches to words on filter list
 def filterExact(msg, asteriskString, filterWords):
     filteredMsg = filteredMsg.replace(msg, asteriskString)
@@ -47,6 +43,7 @@ def filter(msg, asteriskString, filterWords, englishWords, hammingDistance, leve
     #for each word in filter list
     for word in filterWords:
         #for all criteria check if it's a proper english word before filtering it
+        #If a word matches a filter criteria, and is not an english word, the asterisk string is returned
         #only check hamming distance of strings are same length
         if len(word) == len(filteredMsg):
             #if hamming distance isthe value passed in or less, censor it
