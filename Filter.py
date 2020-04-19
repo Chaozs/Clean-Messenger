@@ -13,13 +13,11 @@ def filterMessage(msg):
 
     #for each word in list of words from message
     for index, word in enumerate(message):
-        #check that current word is not a normal english word first
-        if not checkIfRealWord(word, englishWords):
-            #filter that word otherwise
-            #message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
-            #hamming distance of 1 can be inclusive of 0 for exact match also
-            message[index] = filter(message[index], generateRandomAsteriskString(),
-            filterWords, hammingDistance, levenshteinDistance)
+
+        #message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
+        #hamming distance of 1 can be inclusive of 0 for exact match also
+        message[index] = filter(message[index], generateRandomAsteriskString(),
+                                filterWords, englishWords, hammingDistance, levenshteinDistance)
 
     #rebuild the llist of words back into the message seperated by space
     filteredMsg = ""
@@ -38,34 +36,38 @@ def generateRandomAsteriskString():
 #unused
 #function to filter exact matches to words on filter list
 def filterExact(msg, asteriskString, filterWords):
-    filteredMsg = msg
-    for word in filterWords:
-        #filteredMsg = filteredMsg.replace(word.strip(), asteriskString)
-        pass
+    filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
     return filteredMsg
 
 #function to filter utilization hamming distance and Levenshtein distance
-def filter(msg, asteriskString, filterWords, hammingDistance, levenshteinDistance):
-    filteredMsg = msg
+def filter(msg, asteriskString, filterWords, englishWords, hammingDistance, levenshteinDistance):
+    filteredMsg = msg.strip()
     #for each word in filter list
     for word in filterWords:
+        #for all criteria check if it's a proper english word before filtering it
         #only check hamming distance of strings are same length
-        if len(word.strip()) == len(msg.strip()):
+        if len(word.strip()) == len(filteredMsg):
             #if hamming distance isthe value passed in or less, censor it
-            if hamming(word.strip(), msg.strip()) <= hammingDistance:
-                filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
+            if hamming(word.strip(), filteredMsg) <= hammingDistance:
+                if not checkIfRealWord(filteredMsg, englishWords):
+                    filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
+                    return filteredMsg
             #if not within hamming distance, check levenshtein distance is within range to be filtered
-            elif distance(word.strip(), msg.strip()) <= levenshteinDistance:
-                filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
-        #if length not equal, check if within levenshtein distance length
-        elif abs(len(word.strip()) - len(msg.strip()) <= levenshteinDistance):
-            # check if levenshtein distance is within range to be filtered
-            if distance(word.strip(), msg.strip()) <= levenshteinDistance:
-                filteredMsg = filteredMsg.replace(msg.strip(), asteriskString)
+            elif distance(word.strip(), filteredMsg) <= levenshteinDistance:
+                if not checkIfRealWord(filteredMsg, englishWords):
+                    filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
+                    return filteredMsg
+        #if not same length, check if within levenshtein distance insert range
+        elif abs(len(word.strip()) - len(filteredMsg) <= levenshteinDistance):
+            if distance(word.strip(), filteredMsg) <= levenshteinDistance:
+                if not checkIfRealWord(filteredMsg, englishWords):
+                    filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
+                    return filteredMsg
     return filteredMsg
 
 def checkIfRealWord(filterWord, englishWords):
     for word in englishWords:
-        if filterWord.strip() == word.strip():
+        # compare if string matches - strip spaces, and compare non-case sensitive
+        if filterWord.strip().lower() == word.strip().lower():
             return True
     return False
