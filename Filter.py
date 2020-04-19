@@ -2,7 +2,7 @@ import WordChecker, random
 from Levenshtein import distance, hamming
 
 #function for filtering a message. Will return a filtered message
-def filterMessage(msg, hammingDistance, levenshteinDistance):
+def filterMessage(msg, levenshteinDistance):
     #split message string into list of words, seperated by white space
     message = list(msg.split(" "))
     filterWords = WordChecker.get_words_from_file("filter.txt")
@@ -14,8 +14,8 @@ def filterMessage(msg, hammingDistance, levenshteinDistance):
         if len(word) == 0:
             pass
         else:
-            message[index] = filter(message[index], filterWords,
-            englishWords, hammingDistance, levenshteinDistance)
+            message[index] = filterLevenshtein(message[index], filterWords,
+            englishWords, levenshteinDistance)
     #rebuild the list of words back into the message seperated by space
     filteredMsg = ""
     for word in message:
@@ -32,8 +32,11 @@ def generateRandomAsteriskString():
 
 #unused - testing purposes only
 #function to filter exact matches to words on filter list
-def filterExact(msg, asteriskString, filterWords):
-    filteredMsg = filteredMsg.replace(msg, asteriskString)
+def filterExact(msg):
+    filteredMsg = msg
+    filterWords = WordChecker.get_words_from_file("filter.txt")
+    for word in filterWords:
+        filteredMsg = filteredMsg.replace(word, generateRandomAsteriskString())
     return filteredMsg
 
 #function to filter utilization hamming distance and Levenshtein distance
@@ -56,6 +59,22 @@ def filter(msg, filterWords, englishWords, hammingDistance, levenshteinDistance)
                     return generateRandomAsteriskString()
         #if not same length, check if within levenshtein distance insert range
         elif abs(len(word) - len(filteredMsg) <= levenshteinDistance):
+            if distance(word, filteredMsg) <= levenshteinDistance:
+                if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
+                    return generateRandomAsteriskString()
+    # Otherwise, return original string
+    return msg
+
+
+#function to filter utilizating Levenshtein distance
+def filterLevenshtein(msg, filterWords, englishWords, levenshteinDistance):
+    #Filter special characters from string
+    filteredMsg = ''.join(e for e in msg if e.isalnum())
+    #for each word in filter list
+    for word in filterWords:
+        #for all criteria check if it's a proper english word before filtering it
+        #If a word matches a filter criteria, and is not an english word, the asterisk string is returned
+        if abs(len(word) - len(filteredMsg) <= levenshteinDistance):
             if distance(word, filteredMsg) <= levenshteinDistance:
                 if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
                     return generateRandomAsteriskString()
