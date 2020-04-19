@@ -39,7 +39,8 @@ def filterExact(msg, asteriskString, filterWords):
 
 #function to filter utilization hamming distance and Levenshtein distance
 def filter(msg, asteriskString, filterWords, englishWords, hammingDistance, levenshteinDistance):
-    filteredMsg = msg.strip()
+    #Filter special characters from string
+    filteredMsg = ''.join(e for e in msg if e.isalnum())
     #for each word in filter list
     for word in filterWords:
         #for all criteria check if it's a proper english word before filtering it
@@ -48,17 +49,15 @@ def filter(msg, asteriskString, filterWords, englishWords, hammingDistance, leve
             #if hamming distance isthe value passed in or less, censor it
             if hamming(word, filteredMsg) <= hammingDistance:
                 if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
-                    filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
-                    return filteredMsg
+                    return asteriskString
             #if not within hamming distance, check levenshtein distance is within range to be filtered
             elif distance(word, filteredMsg) <= levenshteinDistance:
                 if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
-                    filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
-                    return filteredMsg
+                    return asteriskString
         #if not same length, check if within levenshtein distance insert range
         elif abs(len(word) - len(filteredMsg) <= levenshteinDistance):
             if distance(word, filteredMsg) <= levenshteinDistance:
                 if not WordChecker.check_word_exists_in(englishWords, filteredMsg):
-                    filteredMsg = filteredMsg.replace(filteredMsg, asteriskString)
-                    return filteredMsg
-    return filteredMsg
+                    return asteriskString
+    # Otherwise, return original string
+    return msg
