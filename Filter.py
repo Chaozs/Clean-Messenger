@@ -13,11 +13,14 @@ def filterMessage(msg):
 
     #for each word in list of words from message
     for index, word in enumerate(message):
-        #message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
-        #hamming distance of 1 can be inclusive of 0 for exact match also
-        message[index] = filter(message[index], generateRandomAsteriskString(),
-                filterWords, englishWords, hammingDistance, levenshteinDistance)
-    #rebuild the llist of words back into the message seperated by space
+        if len(word) == 0:
+            pass
+        else:
+            #message[index] = filterExact(message[index], generateRandomAsteriskString(), filterWords)
+            #hamming distance of 1 can be inclusive of 0 for exact match also
+            message[index] = filter(message[index], generateRandomAsteriskString(),
+                    filterWords, englishWords, hammingDistance, levenshteinDistance)
+    #rebuild the list of words back into the message seperated by space
     filteredMsg = ""
     for word in message:
         filteredMsg = filteredMsg + word + " "
