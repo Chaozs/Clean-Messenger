@@ -15,8 +15,10 @@ client_socket = socket(AF_INET, SOCK_STREAM)
 client_socket.connect(ADDR)
 
 sendMode = 0 # 0 = send message, 1 = add to filter
+#Initialize and load word2vec model
 word2vec = Word2VecInterface.Word2VecInterface()
 
+# Receiving messages from server
 def receive():
     #infinite loop due for receiving messages non-deterministically
     while True:
@@ -122,6 +124,7 @@ msg_list.pack(side=LEFT, fill=BOTH)
 msg_list.pack()
 messages_frame.pack()
 
+#Display what mode "send" is currently on
 modeMessage = Label(window, textvariable=mode)
 modeMessage.pack(anchor=N)
 
@@ -132,11 +135,13 @@ entry_field.pack(fill=BOTH, expand=True)
 send_button = Button(window, text="Send", command=send)
 send_button.pack()
 
+#Button for swapping mode
 swap_button = Button(window, text="Swap mode", command=swapMode)
 swap_button.pack(anchor=E)
 
 window.protocol("WM_DELETE_WINDOW", on_closing)
 
+#Assign a thread for listening
 receive_thread = Thread(target=receive)
 receive_thread.start()
 mainloop()  # Starts GUI execution.

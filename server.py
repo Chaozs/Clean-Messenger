@@ -5,6 +5,7 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 import signal, sys
 
+#List of connected clients, and their address
 clients = {}
 addresses = {}
 
@@ -59,7 +60,7 @@ def handle_client(client):  # Takes client socket as argument.
             break
 
 #function to broadcast message to all connected clients
-def broadcast(msg, prefix=""): 
+def broadcast(msg, prefix=""):
     # sends message to all connected clients
     for sock in clients:
         sock.send(bytes(prefix, "utf8")+bytes(msg, "utf8"))
