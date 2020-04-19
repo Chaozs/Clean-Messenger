@@ -66,8 +66,5 @@ def filter(msg, asteriskString, filterWords, englishWords, hammingDistance, leve
     return filteredMsg
 
 def checkIfRealWord(filterWord, englishWords):
-    for word in englishWords:
-        # compare if string matches - strip spaces, and compare non-case sensitive
-        if filterWord.strip().lower() == word.strip().lower():
-            return True
-    return False
+    #Check if word exists in list of english words
+    return (filterWord in englishWords)

@@ -3,7 +3,7 @@
 def get_words_from_file(filename):
 
     fileWords = open(filename, "r")
-    words = fileWords.readlines()
+    words = fileWords.read().splitlines()
     fileWords.close()
     return words
 
